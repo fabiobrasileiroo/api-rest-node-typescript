@@ -4,7 +4,9 @@
   "main": "index.js",
   "author": "Fabio Brasileiro",
   "scripts": {
-    "dev": "ts-node-dev ./src/index.ts"
+    "dev": "ts-node-dev ./src/index.ts",
+    "build": "node ./build/index.js",
+    "generateBuild": "yarn tsc"
   },
   "license": "MIT",
   "private": false,
