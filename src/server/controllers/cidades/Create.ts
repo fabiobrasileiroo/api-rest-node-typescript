@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import * as yup from "yup";
 interface ICidade {
@@ -10,11 +10,10 @@ const bodyValidation: yup.ObjectSchema<ICidade> = yup.object().shape({
   nome: yup.string().required().min(3),
   estado: yup.string().required().min(3),
 });
-
-export const create = async (req: Request<{}, {}, ICidade>, res: Response) => {
-  let validateData: ICidade | undefined = undefined;
-  try {
-   validateData = await bodyValidation.validate(req.body, { abortEarly: false});
+export const createBodyValidation: RequestHandler = async (req, res, next) => {
+    try {
+    await bodyValidation.validate(req.body, { abortEarly: false});
+    return next();
   } catch (err) {
     const yupError =  err as yup.ValidationError;
     const errors:Record<string, string> ={
@@ -28,8 +27,13 @@ export const create = async (req: Request<{}, {}, ICidade>, res: Response) => {
       //   default: validationErrors
       // }
     })
-  }
-  const data: ICidade = req.body;
-  console.log(data.nome);
+  } 
+}
+
+export const create = async (req: Request<{}, {}, ICidade>, res: Response) => {
+  let validateData: ICidade | undefined = undefined;
+ 
+  // const data: ICidade = req.body;
+  // console.log(data.nome);
   return res.send("Create Cidade");
 };
